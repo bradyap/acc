@@ -39,8 +39,10 @@ def find_cars(img):
         # label distance
         label = f"{distance:.1f}m"
         label_size = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.7, 2)[0]
-        cv.rectangle(img, (x, y - label_size[1] - 10), (x + label_size[0], y), (0, 0, 255), -1)
-        cv.putText(img, label, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv.rectangle(
+            img, (x, y - label_size[1] - 10), (x + label_size[0], y), (0, 0, 255), -1)
+        cv.putText(img, label, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX,
+                   0.7, (255, 255, 255), 2)
 
     return img
 
