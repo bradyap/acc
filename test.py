@@ -48,14 +48,14 @@ def find_cars(img):
 
 
 car_detector = cv.CascadeClassifier('cars.xml')
-video = cv.VideoCapture('test_content/dashcam1.mp4')
+video = cv.VideoCapture('test_content/day.mov')
 
 # video properties for saving
 frame_width = int(video.get(cv.CAP_PROP_FRAME_WIDTH))
 frame_height = int(video.get(cv.CAP_PROP_FRAME_HEIGHT))
 fps = video.get(cv.CAP_PROP_FPS)
 
-out = cv.VideoWriter('output_with_detections.mp4', cv.VideoWriter_fourcc(
+out = cv.VideoWriter('test_output.mp4', cv.VideoWriter_fourcc(
     *'mp4v'), fps, (frame_width, frame_height))
 
 while video.isOpened():

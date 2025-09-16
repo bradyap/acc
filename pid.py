@@ -1,50 +1,68 @@
 import time
 
-KP = 1
-KI = 0
-KD = 0
 
-prev_time = 0  # Last time PID ran
-total_error = 0.0  # Integral term
-prev_error = 0.0  # Previous error for derivative term
+class PIDController:
+    def __init__(self, kp=1.0, ki=0.0, kd=0.0, min_dt=0.001):
+        """
+        Initialize PID controller.
 
+        Args:
+            kp: Proportional gain
+            ki: Integral gain 
+            kd: Derivative gain
+            min_dt: Minimum time interval between updates
+        """
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.min_dt = min_dt
 
-def pid_follow(current_distance, target_distance, fwd_motor_speed):
-    global prev_time, total_error, prev_error
+        self.prev_time = 0
+        self.total_error = 0.0
+        self.prev_error = 0.0
 
-    current_time = time.time()  # Current time in seconds
-    dt = current_time - prev_time  # Time since last PID update in seconds
+    def reset(self):
+        self.prev_time = 0
+        self.total_error = 0.0
+        self.prev_error = 0.0
 
-    # Skip if dt is too small, don't need super rapid updates
-    if dt < 0.001:
-        return None, None
+    def update(self, current_value, target_value):
+        """
+        Calculate PID output.
 
-    # Otherwise run and update prev time
-    prev_time = current_time
+        Args:
+            current_value: Current measured value
+            target_value: Desired target value
 
-    # Handle bad readings
-    if current_distance == 0:
-        return None, None
+        Returns:
+            PID output correction value, or None if update skipped
+        """
+        current_time = time.time()
+        dt = current_time - self.prev_time
 
-    error = target_distance - current_distance
-    proportional = KP * error * dt  # Proportional term
+        # Skip if dt is too small
+        if dt < self.min_dt:
+            return None
 
-    # Integral term
-    # TODO: Add limits to prevent integral windup?
-    total_error += error
-    integral = KI * total_error
+        # Update prev time
+        self.prev_time = current_time
 
-    # Derivative term
-    derivative = KD * (error - prev_error) / dt
-    prev_error = error  # Store current error for next iteration
+        # Handle bad readings
+        if current_value == 0:
+            return None
 
-    # Combine all terms to get the final correction
-    correction = proportional + integral + derivative
+        error = target_value - current_value
+        proportional = self.kp * error * dt
 
-    # Adjust motor speeds accordingly
-    left_speed = fwd_motor_speed + correction
-    right_speed = fwd_motor_speed - correction
+        # Integral term
+        self.total_error += error
+        integral = self.ki * self.total_error
 
-    # TODO: Add limits to control correction speed
+        # Derivative term
+        derivative = self.kd * (error - self.prev_error) / dt
+        self.prev_error = error
 
-    return left_speed, right_speed
+        # Combine all terms
+        correction = proportional + integral + derivative
+
+        return correction
