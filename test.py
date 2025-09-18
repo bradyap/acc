@@ -1,5 +1,8 @@
 import cv2 as cv
 import time
+import os
+
+os.environ.pop("QT_QPA_PLATFORM_PLUGIN_PATH", None)
 
 known_distance = 50  # meters - distance when calibrating
 known_width = 1.8    # meters - average car width
