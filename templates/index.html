@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raspberry Pi Camera Stream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #video-stream {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid #333;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Raspberry Pi Live Camera Stream</h1>
+    <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Video Stream">
+</body>
+</html>
