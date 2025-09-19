@@ -1,1 +1,1 @@
-Basic adaptive cruise control functionality using computer vision with Python and OpenCV. Communicates with the car via it's CAN bus, integrating with the existing basic cruise control system via a PID controller.
+Basic adaptive cruise control functionality using computer vision with Python and OpenCV. Communicates with the car via its CAN bus, integrating with the existing basic cruise control system via a PID controller.
