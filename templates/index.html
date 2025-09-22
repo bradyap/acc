@@ -1,30 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raspberry Pi Camera Stream</title>
+    <meta charset="UTF-8" />
+    <title>Car Detection Stream</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
+            background: #111;
+            color: #eee;
+            margin: 20px;
         }
-        h1 {
-            color: #333;
+
+        #container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
         }
-        #video-stream {
-            max-width: 100%;
-            height: auto;
-            border: 3px solid #333;
-            border-radius: 10px;
+
+        #panel {
+            min-width: 220px;
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
+
+        img {
+            border: 2px solid #333;
+            max-width: 640px;
         }
     </style>
 </head>
+
 <body>
-    <h1>Raspberry Pi Live Camera Stream</h1>
-    <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Video Stream">
+    <h1>Car Detection</h1>
+    <div id="container">
+        <div>
+            <img id="stream" src="/video_feed" alt="Video stream">
+        </div>
+        <div id="panel">
+            <div class="label">Closest Vehicle Distance</div>
+            <div id="distance" class="value">--</div>
+            <div id="status" style="margin-top:8px;font-size:0.75rem;color:#888;">Updating...</div>
+        </div>
+    </div>
+    <script>
+        async function pollDistance() {
+            try {
+                const r = await fetch('/distance', { cache: 'no-store' });
+                if (!r.ok) throw new Error(r.status);
+                const data = await r.json();
+                const el = document.getElementById('distance');
+                if (data.distance === null) {
+                    el.textContent = 'No car';
+                } else {
+                    el.textContent = data.distance.toFixed(2) + ' m';
+                }
+                document.getElementById('status').textContent = 'OK';
+            } catch (e) {
+                document.getElementById('status').textContent = 'Error';
+            } finally {
+                setTimeout(pollDistance, 750);
+            }
+        }
+        pollDistance();
+    </script>
 </body>
+
 </html>
