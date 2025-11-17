@@ -7,21 +7,17 @@ import os
 known_distance = 50  # meters - distance when calibrating
 known_width = 1.8    # meters - average car width
 
-
 def calc_focal_length(known_distance, known_width, img_width):
     focal_length = (img_width * known_distance) / known_width
     return focal_length
-
 
 def find_distance(focal_length, known_width, img_width):
     distance = (known_width * focal_length) / img_width
     return distance
 
-
 # calibrate with car at known distance
 # testing w/ a car at 50m appears 30 pixels wide
 focal_length = calc_focal_length(known_distance, known_width, 30)
-
 
 def find_cars(img):
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -48,7 +44,6 @@ def find_cars(img):
                    0.7, (255, 255, 255), 2)
 
     return img
-
 
 car_detector = cv.CascadeClassifier('cars.xml')
 video = cv.VideoCapture('test_content/day.mov')

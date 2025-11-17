@@ -3,15 +3,6 @@ import time
 
 class PIDController:
     def __init__(self, kp=1.0, ki=0.0, kd=0.0, min_dt=0.001):
-        """
-        Initialize PID controller.
-
-        Args:
-            kp: Proportional gain
-            ki: Integral gain 
-            kd: Derivative gain
-            min_dt: Minimum time interval between updates
-        """
         self.kp = kp
         self.ki = ki
         self.kd = kd
@@ -27,16 +18,6 @@ class PIDController:
         self.prev_error = 0.0
 
     def update(self, current_value, target_value):
-        """
-        Calculate PID output.
-
-        Args:
-            current_value: Current measured value
-            target_value: Desired target value
-
-        Returns:
-            PID output correction value, or None if update skipped
-        """
         current_time = time.time()
         dt = current_time - self.prev_time
 

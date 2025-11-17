@@ -7,10 +7,18 @@ import cv2 as cv
 
 from webapp import run_server
 
+# Detection / distance helpers
+KNOWN_DISTANCE_M = 50.0 # Distance to known calibration car
+KNOWN_WIDTH_M = 1.8 # Width of known calibration car
+CALIB_WIDTH_PX = 30 # Width of calibration car in pixels
+
+# Caclulate focal length from caliration values
+FOCAL_LENGTH = (CALIB_WIDTH_PX * KNOWN_DISTANCE_M) / KNOWN_WIDTH_M
+
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
         self.frame = None
-        self.distance = None   # closest object distance (meters)
+        self.distance = None   # Closest object distance (meters)
         self.condition = Condition()
 
     def update(self, buf: bytes, distance):
@@ -18,12 +26,6 @@ class StreamingOutput(io.BufferedIOBase):
             self.frame = buf
             self.distance = distance
             self.condition.notify_all()
-
-# Detection / distance helpers
-KNOWN_DISTANCE_M = 50.0
-KNOWN_WIDTH_M = 1.8
-CALIB_WIDTH_PX = 30
-FOCAL_LENGTH = (CALIB_WIDTH_PX * KNOWN_DISTANCE_M) / KNOWN_WIDTH_M
 
 def find_distance(focal_length, known_width, observed_width):
     if observed_width == 0:
